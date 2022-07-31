@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS users
-(id BIGINT PRIMARY KEY,
-  username varchar(25) NOT NULL,
-  password varchar(30) NOT NULL,
-  deposit int,
-  role varchar);
+(id INTEGER PRIMARY KEY,
+username varchar(25) UNIQUE NOT NULL,
+password varchar(30) NOT NULL,
+deposit int DEFAULT 0,
+role varchar(25) DEFAULT "buyer");

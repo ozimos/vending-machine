@@ -2,7 +2,7 @@ clean:
 	rm -rf target
 
 run:
-	clj -M:dev
+	clj -M:dev:cider
 
 repl:
 	clj -M:dev:nrepl

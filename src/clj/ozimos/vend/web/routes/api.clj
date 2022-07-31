@@ -2,9 +2,10 @@
   (:require
    [ozimos.vend.web.controllers.health :as health]
    [ozimos.vend.web.controllers.auth :as auth]
+   [ozimos.vend.web.controllers.user :as user]
    [ozimos.vend.web.middleware.exception :as exception]
    [ozimos.vend.web.middleware.formats :as formats]
-   [ozimos.vend.web.auth.utils :as auth-utils]
+   [ozimos.vend.web.middleware.auth :as auth-mw]
    [integrant.core :as ig]
    [reitit.coercion.malli :as malli]
    [reitit.ring.spec :as rrs]
@@ -17,16 +18,27 @@
    [reitit.swagger :as swagger]
    [reitit.swagger-ui :as swagger-ui]))
 
-(def User [:map
-           [:username [:string {:min 4}]]
-           [:password [:string {:min 4}]]])
+;; Route parameter validation
+(def Role [:role {:optional true} [:enum {:default "buyer"}"buyer" "seller"]])
+
+(def BaseUser [:map
+               [:username [:string {:min 4}]]])
+
+(def LoginUser (conj BaseUser [:password [:string {:min 4}]]))
+
+(def CreateUser (conj LoginUser Role))
+
+(def UpdateUser (conj BaseUser Role))
+
+(def auth-mw [auth-mw/wrap-jwt-authentication-middleware
+              auth-mw/check-auth-middleware])
 
 ;; Routes
-(defn api-routes [opts]
+(defn api-routes [_opts]
   [["/swagger.json"
     {:get {:no-doc  true
-           :swagger {:info {:title "vend API"
-                            :description "An API for creating and enjoying vends"
+           :swagger {:info {:title "Vend API"
+                            :description "An API for buying and selling"
                             :version "1.0.0"}}
            :handler (swagger/create-swagger-handler)}}]
    ["/api-docs/*"
@@ -34,15 +46,26 @@
    ["/health"
     {:get health/healthcheck!}]
    ["/user"
-    {:post {:parameters {:body User}
-            :handler (auth/make-register-handler opts)}}]
+    ["" {:post {:parameters {:body CreateUser}
+                :handler auth/register}
+         :get {:middleware auth-mw
+               :handler user/get-all-users}}]
+    ["/:id" {:middleware auth-mw
+             :get {:parameters {:path {:id int?}}
+                   :handler user/get-user}
+             :put {:parameters {:body UpdateUser
+                                :path {:id int?}}
+                   :handler user/update-user}
+             :delete {:parameters {:path {:id int?}}
+                      :handler user/delete-user}}]]
    ["/deposit"
-    {:middleware [auth-utils/wrap-jwt-authentication-middleware auth-utils/check-auth-middleware]}
+    {:middleware [auth-mw/wrap-jwt-authentication-middleware
+                  auth-mw/check-auth-middleware]}
     ["" {:get health/healthcheck!
          :post health/healthcheck!}]]
    ["/login"
-    {:post {:parameters {:body User}
-            :handler (auth/make-login-handler opts)}}]])
+    {:post {:parameters {:body LoginUser}
+            :handler auth/login}}]])
 
 (defn route-data
   [opts]

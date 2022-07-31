@@ -1,4 +1,4 @@
-(ns ozimos.vend.web.auth.utils
+(ns ozimos.vend.web.middleware.auth
   (:require [buddy.auth.backends :as backends]
             [buddy.auth :as buddy]
             [buddy.auth.middleware :as b.auth.mw]
