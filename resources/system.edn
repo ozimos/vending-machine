@@ -1,0 +1,31 @@
+{:system/env
+ #profile {:dev :dev
+           :test :test
+           :prod :prod}
+
+ :server/http
+ {:port #long #or [#env PORT 3000]
+  :host #or [#env HTTP_HOST "0.0.0.0"]
+  :handler #ig/ref :handler/ring}
+
+ :handler/ring
+ {:router #ig/ref :router/core
+  :api-path ""}
+
+ :router/core
+ {:base-path ""
+  :jwt-secret #or [#env JWT_SECRET "ODNEADLEOANEASD"]
+  :env #ig/ref :system/env
+  :query-fn #ig/ref :db.sql/query-fn}
+
+ :db.sql/query-fn {:conn #ig/ref :db.sql/connection,
+                   :options {},
+                   :filename "sql/queries.sql"}
+
+ :db.sql/migrations {:store :database,
+                     :db {:datasource #ig/ref :db.sql/connection},
+                     :migrate-on-init? true}
+
+ :db.sql/connection #profile {:dev {:jdbc-url "jdbc:sqlite:vend_dev.db"},
+                              :test {:jdbc-url "jdbc:sqlite:vend_test.db"},
+                              :prod {:jdbc-url #env JDBC_URL}}}
