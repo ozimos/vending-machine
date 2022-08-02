@@ -14,9 +14,12 @@
 
  :router/core
  {:base-path ""
-  :jwt-secret #or [#env JWT_SECRET "ODNEADLEOANEASD"]
+  :jwt-secret #ref [:auth/jwt-secret]
+  :token-exp 1440 ;; mins
   :env #ig/ref :system/env
   :query-fn #ig/ref :db.sql/query-fn}
+
+ :auth/jwt-secret #or [#env JWT_SECRET "ODNEADLEOANEASD"]
 
  :db.sql/query-fn {:conn #ig/ref :db.sql/connection,
                    :options {},

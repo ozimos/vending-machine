@@ -3,6 +3,7 @@
    [ozimos.vend.web.controllers.health :as health]
    [ozimos.vend.web.controllers.auth :as auth]
    [ozimos.vend.web.controllers.user :as user]
+   [ozimos.vend.web.controllers.product :as product]
    [ozimos.vend.web.middleware.exception :as exception]
    [ozimos.vend.web.middleware.formats :as formats]
    [ozimos.vend.web.middleware.auth :as auth-mw]
@@ -11,6 +12,7 @@
    [reitit.ring.spec :as rrs]
    [reitit.spec :as rs]
    [expound.alpha :as e]
+   [malli.util :as mu]
    [reitit.ring :as ring]
    [reitit.ring.coercion :as coercion]
    [reitit.ring.middleware.muuntaja :as muuntaja]
@@ -19,18 +21,26 @@
    [reitit.swagger-ui :as swagger-ui]))
 
 ;; Route parameter validation
-(def Role [:role {:optional true} [:enum {:default "buyer"}"buyer" "seller"]])
+(def Role [:role {:optional true} [:enum {:default "buyer"} "buyer" "seller"]])
 
 (def BaseUser [:map
-               [:username [:string {:min 4}]]])
+               [:username [:string {:min 2}]]])
 
 (def LoginUser (conj BaseUser [:password [:string {:min 4}]]))
 
 (def CreateUser (conj LoginUser Role))
 
-(def UpdateUser (conj BaseUser Role))
+(def UpdateUser (mu/optional-keys BaseUser))
 
-(def auth-mw [auth-mw/wrap-jwt-authentication-middleware
+(def Product [:map
+              [:amount-available int?]
+              [:cost [:and :int [:fn (fn [v] (zero? (mod v 5)))]]]
+              [:product-name [:string {:min 2}]]])
+
+(def UpdateProduct (mu/optional-keys Product))
+
+(def auth-mw [auth-mw/wrap-jwt-authorization-middleware
+              auth-mw/wrap-jwt-authentication-middleware
               auth-mw/check-auth-middleware])
 
 ;; Routes
@@ -45,24 +55,41 @@
     {:get (swagger-ui/create-swagger-ui-handler)}]
    ["/health"
     {:get health/healthcheck!}]
-   ["/user"
+   ["/user" {:middleware auth-mw}
     ["" {:post {:parameters {:body CreateUser}
+                ::auth-mw/auth-exempt true
                 :handler auth/register}
-         :get {:middleware auth-mw
-               :handler user/get-all-users}}]
-    ["/:id" {:middleware auth-mw
-             :get {:parameters {:path {:id int?}}
+         :get {:handler user/get-all-users
+               :middleware [auth-mw/admin-only-middleware]}}]
+    ["/:id" {:get {:parameters {:path {:id int?}}
                    :handler user/get-user}
              :put {:parameters {:body UpdateUser
                                 :path {:id int?}}
                    :handler user/update-user}
              :delete {:parameters {:path {:id int?}}
-                      :handler user/delete-user}}]]
-   ["/deposit"
-    {:middleware [auth-mw/wrap-jwt-authentication-middleware
-                  auth-mw/check-auth-middleware]}
-    ["" {:get health/healthcheck!
-         :post health/healthcheck!}]]
+                      :handler user/delete-user}
+             :middleware [auth-mw/self-or-admin-middleware]}]]
+   ["/product"
+    {:middleware (conj auth-mw auth-mw/seller-only-middleware)}
+    ["" {:post {:parameters {:body Product}
+                :handler auth/register}
+         :get {:handler product/get-all-products
+               ::auth-mw/all-authorized true}}]
+    ["/:id" {:get {:parameters {:path {:id int?}}
+                   ::auth-mw/all-authorized true
+                   :handler product/get-product}
+             :put {:parameters {:body UpdateProduct
+                                :path {:id int?}}
+                   :handler product/update-product}
+             :delete {:parameters {:path {:id int?}}
+                      :handler product/delete-product}}]]
+   ["" {:middleware (conj auth-mw auth-mw/buyer-only-middleware)}
+    ["/deposit"
+     {:get health/healthcheck!}]
+    ["/buy"
+     {:get health/healthcheck!}]
+    ["/reset"
+     {:get health/healthcheck!}]]
    ["/login"
     {:post {:parameters {:body LoginUser}
             :handler auth/login}}]])

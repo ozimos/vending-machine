@@ -34,7 +34,8 @@
       (catch clojure.lang.ExceptionInfo e
         (if (some-> (.getMessage ^Exception e)
                     (str/includes? "UNIQUE constraint failed: users.username"))
-          (http-response/bad-request {:errors {:username ["The username is already taken"]}})
+          (http-response/bad-request {:humanized {:username ["The username is already taken"]}
+                                      :message "Failed to update user"})
           (throw e))))))
 
 

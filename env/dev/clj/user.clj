@@ -46,7 +46,6 @@
   *e
   (reset)
   (halt)
-  (require '[migratus.core :as])
   (migratus.core/create (:db.sql/migrations state/system) "add-products-table")
   (migratus.core/migrate (:db.sql/migrations state/system))
   (migratus.core/rollback (:db.sql/migrations state/system))

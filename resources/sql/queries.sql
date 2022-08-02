@@ -1,5 +1,7 @@
 -- Place your queries here. Docs available https://www.hugsql.org/
 
+-- User Queries
+
 -- :name create-user! :<! :1
 -- :doc creates a new user record
 INSERT INTO users
@@ -12,7 +14,7 @@ SELECT * FROM users WHERE
 username = :username
 
 -- :name get-user-by-id! :? :1
--- :doc gets user record by username
+-- :doc gets user record by user id
 SELECT id, username, role, deposit FROM users WHERE
 id = :id
 
@@ -33,7 +35,43 @@ UPDATE users SET
 ~*/
 WHERE
 id = :id
-RETURNING id, username, role
+RETURNING id, username, role, deposit
 
 -- :name delete-user-by-id! :! :n
 DELETE FROM users WHERE id = :id
+
+
+-- Product Queries
+
+-- :name create-product! :<! :1
+-- :doc creates a new product record
+INSERT INTO products
+(amount_available, product_name, cost, seller_id)
+VALUES (:amount-available, :product-name, :cost, :seller-id) RETURNING id
+
+-- :name get-product-by-id! :? :1
+-- :doc gets product record by product id
+SELECT id, amount_available, product_name, cost, seller_id FROM products WHERE
+id = :id
+
+-- :name get-all-products! :? :raw
+-- :doc gets all product records
+SELECT id, amount_available, product_name, cost, seller_id FROM products
+
+-- :name update-product-by-id! :<! :1
+-- :doc updates product record
+/* :require [clojure.string :as string]
+            [hugsql.parameters :refer [identifier-param-quote]] */
+UPDATE products SET
+/*~
+(string/join ","
+  (for [[field _] (:updates params)]
+    (str (identifier-param-quote (name field) options)
+      " = :v:updates." (name field))))
+~*/
+WHERE
+id = :id AND seller_id = :seller-id
+RETURNING id, amount_available, product_name, cost, seller_id
+
+-- :name delete-product-by-id! :! :n
+DELETE FROM products WHERE id = :id AND seller_id = :seller-id

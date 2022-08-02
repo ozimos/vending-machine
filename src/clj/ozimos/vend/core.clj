@@ -31,12 +31,12 @@
   (some-> (deref system) (ig/halt!))
   (shutdown-agents))
 
-(defn start-app [& [params]]
+(defn start-app [& [params start-keys]]
   ((or (:start params) (:start defaults) (fn [])))
-  (->> (config/system-config (or (:opts params) (:opts defaults) {}))
-       (ig/prep)
-       (ig/init)
-       (reset! system))
+  (let [config (->> (config/system-config (or (:opts params) (:opts defaults) {}))
+                    (ig/prep))
+        sys (if start-keys (ig/init config start-keys) (ig/init config))]
+    (reset! system sys))
   (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app)))
 
 (defn -main [& _]

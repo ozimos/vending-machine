@@ -13,29 +13,20 @@
             :data      (ex-data exception)
             :uri       (:uri request)}})
 
-(defn wrap-request-coercion-exception-handler
-  [handler]
-  (fn [& args]
-    (let [{:keys [body status]} (apply handler args)]
-      {:status status
-       :body {:errors (:humanized body)}})))
-
 (def wrap-exception
   (exception/create-exception-middleware
-   (-> exception/default-handlers
-       (update :reitit.coercion/request-coercion wrap-request-coercion-exception-handler)
-       (merge
-
-        {:system.exception/internal     (partial handler "internal exception" 500)
-         :system.exception/business     (partial handler "bad request" 400)
-         :system.exception/not-found    (partial handler "not found" 404)
-         :system.exception/unauthorized (partial handler "unauthorized" 401)
-         :system.exception/forbidden    (partial handler "forbidden" 403)
+   (merge
+    exception/default-handlers
+    {:system.exception/internal     (partial handler "internal exception" 500)
+     :system.exception/business     (partial handler "bad request" 400)
+     :system.exception/not-found    (partial handler "not found" 404)
+     :system.exception/unauthorized (partial handler "unauthorized" 401)
+     :system.exception/forbidden    (partial handler "forbidden" 403)
 
 
        ;; override the default handler
-         ::exception/default            (partial handler "default" 500)
+     ::exception/default            (partial handler "default" 500)
 
        ;; print stack-traces for all exceptions
-         ::exception/wrap               (fn [handler e request]
-                                          (handler e request))}))))
+     ::exception/wrap               (fn [handler e request]
+                                      (handler e request))})))
