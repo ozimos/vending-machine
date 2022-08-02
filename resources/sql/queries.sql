@@ -47,7 +47,7 @@ DELETE FROM users WHERE id = :id
 -- :doc creates a new product record
 INSERT INTO products
 (amount_available, product_name, cost, seller_id)
-VALUES (:amount-available, :product-name, :cost, :seller-id) RETURNING id
+VALUES (:amount_available, :product_name, :cost, :seller_id) RETURNING id
 
 -- :name get-product-by-id! :? :1
 -- :doc gets product record by product id
@@ -70,8 +70,8 @@ UPDATE products SET
       " = :v:updates." (name field))))
 ~*/
 WHERE
-id = :id AND seller_id = :seller-id
+id = :id AND seller_id = :seller_id
 RETURNING id, amount_available, product_name, cost, seller_id
 
 -- :name delete-product-by-id! :! :n
-DELETE FROM products WHERE id = :id AND seller_id = :seller-id
+DELETE FROM products WHERE id = :id AND seller_id = :seller_id

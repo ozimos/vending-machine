@@ -56,7 +56,7 @@
                 (fn [handler]
                   (fn
                     [req]
-                    (if (= "seller" (get-in req [:identity :role]))
+                    (if (#{"seller" "admin"} (get-in req [:identity :role]))
                       (handler req)
                       (http-response/forbidden {:message "Only sellers allowed"}))))))})
 
@@ -67,7 +67,7 @@
                 (fn [handler]
                   (fn
                     [req]
-                    (if (= "buyer" (get-in req [:identity :role]))
+                    (if (#{"admin" "buyer"} (get-in req [:identity :role]))
                       (handler req)
                       (http-response/forbidden {:message "Only buyers allowed"}))))))})
 

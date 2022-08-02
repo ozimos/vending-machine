@@ -5,6 +5,7 @@
    [migratus.core]
    [next.jdbc.sql :as sql]
    [buddy.sign.jwt :as jwt]
+   [clojure.set :as set]
    [integrant.core :as ig]
    [integrant.repl.state :as state]))
 
@@ -15,7 +16,16 @@
 (def update-user-self {:id 5 :username "Michael" :password "mike" :role "buyer"})
 (def update-user-admin {:id 6 :username "Ada" :password "lovelace" :role "buyer"})
 
+(def default-product {:sellerId 3 :id 1 :productName "soap" :amountAvailable 5 :cost 5})
+(def deletion-product {:sellerId 3 :id 2 :productName "mouthwash" :amountAvailable 6 :cost 10})
+(def update-product {:sellerId 3 :id 3 :productName "sneaker" :amountAvailable 7 :cost 15})
+
+(def key-conversions {:sellerId :seller_id
+                      :amountAvailable :amount_available
+                      :productName :product_name})
+
 (def users [default-user buyer-user seller-user deletion-user update-user-self update-user-admin])
+(def products [default-product deletion-product update-product])
 
 (defmethod ig/init-key :auth/jwt-secret [_ k] k)
 
@@ -35,11 +45,18 @@
     (migratus.core/reset (:db.sql/migrations s)))
   (f))
 
-(defn populate-db [f]
+(defn populate-db-with-users [f]
   (when-let [s (system-state)]
     (let [db-conn (:db.sql/connection s)
           users-password-hashed (map (fn [user] (auth/update-password-with-hash user)) users)]
       (sql/insert-multi! db-conn :users users-password-hashed)))
+  (f))
+
+(defn populate-db-with-products [f]
+  (when-let [s (system-state)]
+    (sql/insert-multi!
+     (:db.sql/connection s)
+     :products (map #(set/rename-keys % key-conversions) products)))
   (f))
 
 (defn get-handler []

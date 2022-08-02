@@ -1,4 +1,5 @@
-(ns ozimos.vend.core-test
+(ns ozimos.vend.user-test
+  "Tests for the user and login routes"
   (:require
    [ozimos.vend.test-utils :as utils]
    [ring.mock.request :as mock]
@@ -7,7 +8,7 @@
    [clojure.test :refer :all]))
 
 
-(use-fixtures :once (utils/system-fixture) utils/reset-db utils/populate-db)
+(use-fixtures :once (utils/system-fixture) utils/reset-db utils/populate-db-with-users)
 
 (deftest register-user-test
   (testing "Successfully registers a new user"
@@ -118,6 +119,12 @@
           expected-user (-> utils/update-user-admin (assoc :deposit 0 :username "Adam") (dissoc :password))]
       (is (= expected-user (json/read-value body json/keyword-keys-object-mapper)) "returns user details")
       (is (= 200 status) "returns 20X status")))
+  (testing "update user fails for non existent user"
+    (let [handler (utils/get-handler)
+          {:keys [status]} (handler (-> (mock/request :put "/user/20")
+                                        (mock/json-body {:username "Adam"})
+                                        (mock/header "Authorization" (str "Bearer " (utils/create-token {:role "admin"})))))]
+      (is (= 204 status) "returns 20X status")))
   (testing "update user requires authentication"
     (let [handler (utils/get-handler)
           {:keys [status]} (handler (-> (mock/request :put "/user/6")

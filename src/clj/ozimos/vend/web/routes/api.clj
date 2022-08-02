@@ -33,9 +33,9 @@
 (def UpdateUser (mu/optional-keys BaseUser))
 
 (def Product [:map
-              [:amount-available int?]
+              [:amount_available int?]
               [:cost [:and :int [:fn (fn [v] (zero? (mod v 5)))]]]
-              [:product-name [:string {:min 2}]]])
+              [:product_name [:string {:min 2}]]])
 
 (def UpdateProduct (mu/optional-keys Product))
 
@@ -72,7 +72,7 @@
    ["/product"
     {:middleware (conj auth-mw auth-mw/seller-only-middleware)}
     ["" {:post {:parameters {:body Product}
-                :handler auth/register}
+                :handler product/create-product}
          :get {:handler product/get-all-products
                ::auth-mw/all-authorized true}}]
     ["/:id" {:get {:parameters {:path {:id int?}}
