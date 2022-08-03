@@ -56,18 +56,18 @@
                 (fn [handler]
                   (fn
                     [req]
-                    (if (#{"seller" "admin"} (get-in req [:identity :role]))
+                    (if (= "seller" (get-in req [:identity :role]))
                       (handler req)
                       (http-response/forbidden {:message "Only sellers allowed"}))))))})
 
 (def buyer-only-middleware
-  {:name ::sellers-only
+  {:name ::buyers-only
    :compile (fn [{::keys [all-authorized]} _opts]
               (when-not all-authorized
                 (fn [handler]
                   (fn
                     [req]
-                    (if (#{"admin" "buyer"} (get-in req [:identity :role]))
+                    (if (= "buyer" (get-in req [:identity :role]))
                       (handler req)
                       (http-response/forbidden {:message "Only buyers allowed"}))))))})
 

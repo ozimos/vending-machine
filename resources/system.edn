@@ -17,6 +17,7 @@
   :jwt-secret #ref [:auth/jwt-secret]
   :token-exp 1440 ;; mins
   :env #ig/ref :system/env
+  :db-conn #ig/ref :db.sql/connection
   :query-fn #ig/ref :db.sql/query-fn}
 
  :auth/jwt-secret #or [#env JWT_SECRET "ODNEADLEOANEASD"]

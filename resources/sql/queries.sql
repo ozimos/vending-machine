@@ -75,3 +75,32 @@ RETURNING id, amount_available, product_name, cost, seller_id
 
 -- :name delete-product-by-id! :! :n
 DELETE FROM products WHERE id = :id AND seller_id = :seller_id
+
+
+-- Deposit Query
+
+-- :name deposit! :<! :1
+-- :doc append to deposit column with user fund
+UPDATE users SET deposit = deposit || ',' || :deposit
+WHERE id = :id RETURNING deposit
+
+-- Reset Query
+
+-- :name reset-deposit! :<! :1
+-- :doc reset deposit column
+UPDATE users SET deposit = :deposit
+WHERE id = :id RETURNING deposit
+
+-- Buy Queries
+
+-- :name prepare-buy! :<! :1
+-- :doc get buyer and product info
+SELECT users.deposit, products.amount_available, products.cost, 
+products.seller_id, products.product_name FROM users JOIN products 
+WHERE users.id = :id AND products.id = :product_id
+
+-- :name purchase-product! :<! :1
+-- :doc buy a product
+UPDATE products SET amount_available = amount_available - :amount
+WHERE id = :id AND cost = :cost AND amount_available >= :old-amount-available
+RETURNING product_name

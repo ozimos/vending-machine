@@ -87,14 +87,14 @@
     (let [handler (utils/get-handler)
           {:keys [status body]} (handler (-> (mock/request :get "/user/1")
                                         (mock/header "Authorization" (str "Bearer " (utils/create-token {:id 1})))))
-          expected-user (-> utils/default-user (assoc :deposit 0) (dissoc :password)) ]
+          expected-user (-> utils/default-user  (dissoc :password)) ]
       (is (= expected-user (json/read-value body json/keyword-keys-object-mapper)) "returns user details")
       (is (= 200 status) "returns 20X status")))
   (testing "get user succeeds for admin"
     (let [handler (utils/get-handler)
           {:keys [status body]} (handler (-> (mock/request :get "/user/1")
                                         (mock/header "Authorization" (str "Bearer " (utils/create-token {:role "admin"})))))
-          expected-user (-> utils/default-user (assoc :deposit 0) (dissoc :password)) ]
+          expected-user (-> utils/default-user  (dissoc :password)) ]
       (is (= expected-user (json/read-value body json/keyword-keys-object-mapper)) "returns user details")
       (is (= 200 status) "returns 20X status")))
   (testing "get user requires authentication"
@@ -108,7 +108,7 @@
           {:keys [status body]} (handler (-> (mock/request :put "/user/5")
                                              (mock/json-body {:username "Mishael"})
                                              (mock/header "Authorization" (str "Bearer " (utils/create-token {:id 5})))))
-          expected-user (-> utils/update-user-self (assoc :deposit 0 :username "Mishael") (dissoc :password))]
+          expected-user (-> utils/update-user-self (assoc :username "Mishael") (dissoc :password))]
       (is (= expected-user (json/read-value body json/keyword-keys-object-mapper)) "returns user details")
       (is (= 200 status) "returns 20X status")))
   (testing "update user succeeds for admin"
@@ -116,7 +116,7 @@
           {:keys [status body]} (handler (-> (mock/request :put "/user/6")
                                              (mock/json-body {:username "Adam"})
                                              (mock/header "Authorization" (str "Bearer " (utils/create-token {:role "admin"})))))
-          expected-user (-> utils/update-user-admin (assoc :deposit 0 :username "Adam") (dissoc :password))]
+          expected-user (-> utils/update-user-admin (assoc :username "Adam") (dissoc :password))]
       (is (= expected-user (json/read-value body json/keyword-keys-object-mapper)) "returns user details")
       (is (= 200 status) "returns 20X status")))
   (testing "update user fails for non existent user"

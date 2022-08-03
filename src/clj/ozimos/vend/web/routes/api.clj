@@ -3,6 +3,7 @@
    [ozimos.vend.web.controllers.health :as health]
    [ozimos.vend.web.controllers.auth :as auth]
    [ozimos.vend.web.controllers.user :as user]
+   [ozimos.vend.web.controllers.buyer :as buyer]
    [ozimos.vend.web.controllers.product :as product]
    [ozimos.vend.web.middleware.exception :as exception]
    [ozimos.vend.web.middleware.formats :as formats]
@@ -85,11 +86,16 @@
                       :handler product/delete-product}}]]
    ["" {:middleware (conj auth-mw auth-mw/buyer-only-middleware)}
     ["/deposit"
-     {:get health/healthcheck!}]
+     {:handler buyer/deposit
+      :parameters {:body {:deposit [:enum 5 10 20 50 100]}}
+      :post :post-deposit
+      :put :put-deposit}]
     ["/buy"
-     {:get health/healthcheck!}]
-    ["/reset"
-     {:get health/healthcheck!}]]
+     {:handler buyer/buy
+      :parameters {:body {:product_id int? :amount int?}}
+      :post :post-buy
+      :put :put-buy}]
+    ["/reset" buyer/reset]]
    ["/login"
     {:post {:parameters {:body LoginUser}
             :handler auth/login}}]])

@@ -7,7 +7,6 @@
    [next.jdbc :as jdbc]
    [clojure.test :refer :all]))
 
-
 (use-fixtures :once
   (utils/system-fixture)
   utils/reset-db utils/populate-db-with-users
@@ -17,7 +16,7 @@
   (testing "Successfully creates a new product"
     (let [handler (utils/get-handler)
           {:keys [body status]} (handler (-> (mock/request :post "/product")
-                                             (mock/header "Authorization" (str "Bearer " (utils/create-token {:role "seller"})))
+                                             (mock/header "Authorization" (str "Bearer " (utils/create-token {:id 3 :role "seller"})))
                                              (mock/json-body {:product_name "roomba"
                                                               :amount_available 5
                                                               :cost 5})))
@@ -48,16 +47,10 @@
       (is (string? (get-in humanized [:cost 0])) "Returns error message about cost"))))
 
 (deftest get-product-test
-  (testing "get product succeeds for self when authorized"
+  (testing "get product succeeds for authorized user"
     (let [handler (utils/get-handler)
           {:keys [status body]} (handler (-> (mock/request :get "/product/1")
-                                             (mock/header "Authorization" (str "Bearer " (utils/create-token {:id 1 :role "seller"})))))]
-      (is (= utils/default-product (json/read-value body json/keyword-keys-object-mapper)) "returns product details")
-      (is (= 200 status) "returns 20X status")))
-  (testing "get product succeeds for admin"
-    (let [handler (utils/get-handler)
-          {:keys [status body]} (handler (-> (mock/request :get "/product/1")
-                                             (mock/header "Authorization" (str "Bearer " (utils/create-token {:role "admin"})))))]
+                                             (mock/header "Authorization" (str "Bearer " (utils/create-token {:id 2 :role "buyer"})))))]
       (is (= utils/default-product (json/read-value body json/keyword-keys-object-mapper)) "returns product details")
       (is (= 200 status) "returns 20X status")))
   (testing "get product requires authentication"
