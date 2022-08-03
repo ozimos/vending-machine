@@ -60,16 +60,14 @@
     ["" {:post {:parameters {:body CreateUser}
                 ::auth-mw/auth-exempt true
                 :handler auth/register}
-         :get {:handler user/get-all-users
-               :middleware [auth-mw/admin-only-middleware]}}]
+         :get {:handler user/get-all-users}}]
     ["/:id" {:get {:parameters {:path {:id int?}}
                    :handler user/get-user}
              :put {:parameters {:body UpdateUser
                                 :path {:id int?}}
                    :handler user/update-user}
              :delete {:parameters {:path {:id int?}}
-                      :handler user/delete-user}
-             :middleware [auth-mw/self-or-admin-middleware]}]]
+                      :handler user/delete-user}}]]
    ["/product"
     {:middleware (conj auth-mw auth-mw/seller-only-middleware)}
     ["" {:post {:parameters {:body Product}

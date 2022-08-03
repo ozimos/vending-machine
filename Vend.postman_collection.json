@@ -1,0 +1,1141 @@
+{
+  "info": {
+    "_postman_id": "afa828a3-1ef0-45d0-a8bc-37d1df289ad3",
+    "name": "Vend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "3072604"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"username\": \"rajesh\",\r\n\"password\": \"ozim\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:3000/user",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["user"]
+        }
+      },
+      "response": [
+        {
+          "name": "Register",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"kooth\",\r\n\"password\": \"ozim\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/user",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user"]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Location",
+              "value": "/user/1"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "166"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 31 Jul 2022 16:17:18 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Your account has been created\",\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYnV5ZXIiLCJ1c2VybmFtZSI6Imtvb3RoIn0.qcyzYyqbDpv7oYmDr-mqq7boK0TMkkO-mURXBOlGYLQ\"\n}"
+        },
+        {
+          "name": "Register",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"sho\",\r\n\"password\": \"too\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/user",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "682"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 31 Jul 2022 16:48:29 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"schema\": \"[:map {:closed true} [:username [:string {:min 4}]] [:password [:string {:min 4}]] [:role {:optional true} [:enum {:default \\\"buyer\\\"} \\\"buyer\\\" \\\"seller\\\"]]]\",\n    \"errors\": [\n        {\n            \"path\": [\n                \"username\"\n            ],\n            \"in\": [\n                \"username\"\n            ],\n            \"schema\": \"[:string {:min 4}]\",\n            \"value\": \"sho\",\n            \"message\": \"should be at least 4 characters\"\n        },\n        {\n            \"path\": [\n                \"password\"\n            ],\n            \"in\": [\n                \"password\"\n            ],\n            \"schema\": \"[:string {:min 4}]\",\n            \"value\": \"too\",\n            \"message\": \"should be at least 4 characters\"\n        }\n    ],\n    \"value\": {\n        \"password\": \"too\",\n        \"username\": \"sho\"\n    },\n    \"type\": \"reitit.coercion/request-coercion\",\n    \"coercion\": \"malli\",\n    \"in\": [\n        \"request\",\n        \"body-params\"\n    ],\n    \"humanized\": {\n        \"password\": [\n            \"should be at least 4 characters\"\n        ],\n        \"username\": [\n            \"should be at least 4 characters\"\n        ]\n    }\n}"
+        },
+        {
+          "name": "Register",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"rappali\",\r\n\"password\": \"tbbt\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/user",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user"]
+            }
+          },
+          "status": "Conflict",
+          "code": 409,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "97"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 01 Aug 2022 18:56:50 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"humanized\": {\n        \"username\": [\n            \"The username is already taken\"\n        ]\n    },\n    \"message\": \"User registration failed\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get User",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYnV5ZXIiLCJ1c2VybmFtZSI6Imtvb3RoIn0.qcyzYyqbDpv7oYmDr-mqq7boK0TMkkO-mURXBOlGYLQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:3000/user/1",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["user", "1"]
+        }
+      },
+      "response": [
+        {
+          "name": "Get User",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/user/5",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user", "5"]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "47"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 31 Jul 2022 16:50:36 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"No user found for the supplied id\"\n}"
+        },
+        {
+          "name": "Get User",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/user/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user", "1"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "54"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 01 Aug 2022 18:33:23 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"id\": 1,\n    \"username\": \"kooth\",\n    \"role\": \"buyer\",\n    \"deposit\": 0\n}"
+        },
+        {
+          "name": "Get User",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/user/bb",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user", "bb"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "294"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 01 Aug 2022 18:33:52 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"schema\": \"[:map {:closed true} [:id int?]]\",\n    \"errors\": [\n        {\n            \"path\": [\n                \"id\"\n            ],\n            \"in\": [\n                \"id\"\n            ],\n            \"schema\": \"int?\",\n            \"value\": \"bb\",\n            \"message\": \"should be an int\"\n        }\n    ],\n    \"value\": {\n        \"id\": \"bb\"\n    },\n    \"type\": \"reitit.coercion/request-coercion\",\n    \"coercion\": \"malli\",\n    \"in\": [\n        \"request\",\n        \"path-params\"\n    ],\n    \"humanized\": {\n        \"id\": [\n            \"should be an int\"\n        ]\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"username\": \"rajesh\",\r\n\"password\": \"ozim\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:3000/login",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["login"]
+        }
+      },
+      "response": [
+        {
+          "name": "Login",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"rajesh\",\r\n\"password\": \"ozim\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/login",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["login"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "326"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 31 Jul 2022 16:47:32 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Login Success\",\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJyYWplc2giLCJwYXNzd29yZCI6ImJjcnlwdCtzaGE1MTIkOTdlMGUxZTlkYTRlZTVmNzAwMWY3MmIwODVlY2EzNjIkMTIkNDE0MDNmMjMxODVjM2NhNzIxNTA2ZjMxZWRiOTkzZjNkODI0NGYxZGJkNGM3YmE5IiwiZGVwb3NpdCI6MCwicm9sZSI6ImJ1eWVyIn0.6d3mwvr_Mjd5zo7nuzUsK2_r3ebFMvf-5o6ZIzO3X34\"\n}"
+        },
+        {
+          "name": "Login",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"rapali\",\r\n\"password\": \"tbbt\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/login",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["login"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "132"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 01 Aug 2022 18:46:41 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"humanized\": {\n        \"password\": [\n            \"Incorrect username or password\"\n        ],\n        \"username\": [\n            \"Incorrect username or password\"\n        ]\n    },\n    \"message\": \"Login failed\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get All Users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:3000/user",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["user"]
+        }
+      },
+      "response": [
+        {
+          "name": "Get All Users",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/user",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "122"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 31 Jul 2022 16:58:25 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"users\": [\n        {\n            \"id\": 1,\n            \"username\": \"kooth\",\n            \"role\": \"buyer\",\n            \"deposit\": 0\n        },\n        {\n            \"id\": 2,\n            \"username\": \"rajesh\",\n            \"role\": \"buyer\",\n            \"deposit\": 0\n        }\n    ]\n}"
+        },
+        {
+          "name": "Get All Users",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/user",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user"]
+            }
+          },
+          "status": "Forbidden",
+          "code": 403,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "43"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 01 Aug 2022 18:26:57 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Token is expired (1659374749)\"\n}"
+        },
+        {
+          "name": "Get All Users",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/user",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user"]
+            }
+          },
+          "status": "Forbidden",
+          "code": 403,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "46"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 01 Aug 2022 18:30:06 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Only authenticated users allowed\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Delete User",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYnV5ZXIiLCJ1c2VybmFtZSI6Imtvb3RoIn0.qcyzYyqbDpv7oYmDr-mqq7boK0TMkkO-mURXBOlGYLQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "localhost:3000/user/3",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["user", "3"]
+        }
+      },
+      "response": [
+        {
+          "name": "Delete User",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/user/5",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user", "5"]
+            }
+          },
+          "status": "No Content",
+          "code": 204,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "Date",
+              "value": "Sun, 31 Jul 2022 17:16:57 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": null
+        }
+      ]
+    },
+    {
+      "name": "Update User",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYnV5ZXIiLCJ1c2VybmFtZSI6Imtvb3RoIn0.qcyzYyqbDpv7oYmDr-mqq7boK0TMkkO-mURXBOlGYLQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"username\": \"rapalli\",\r\n\"role\": \"buyer\",\r\n\"random\": \"val\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:3000/user/2",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["user", "2"]
+        }
+      },
+      "response": [
+        {
+          "name": "Update User",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"rapalli\",\r\n\"role\": \"seller\",\r\n\"random\": \"val\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/user/2",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user", "2"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "45"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 31 Jul 2022 18:49:05 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"id\": 2,\n    \"username\": \"rapalli\",\n    \"role\": \"seller\"\n}"
+        },
+        {
+          "name": "Update User",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"rapalli\",\r\n\"role\": \"seller\",\r\n\"random\": \"val\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/user/3",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user", "3"]
+            }
+          },
+          "status": "No Content",
+          "code": 204,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "Date",
+              "value": "Sun, 31 Jul 2022 18:55:58 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": null
+        },
+        {
+          "name": "Update User",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"role\": \"seller\",\r\n\"username\": \"rappali\",\r\n\"random\": \"val\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/user/2",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["user", "2"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "94"
+            },
+            {
+              "key": "Date",
+              "value": "Mon, 01 Aug 2022 18:49:06 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"humanized\": {\n        \"username\": [\n            \"The username is already taken\"\n        ]\n    },\n    \"message\": \"Failed to update user\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Create Product",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoic2VsbGVyIiwidXNlcm5hbWUiOiJoYXJvbGQiLCJpZCI6NCwiZXhwIjoxNjU5NjE5MTQ1fQ.rwjWv1K5dfZP5THbqMlHjwsdU80SRO4MeS6MPzHDvzY",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"productName\": \"shoe\",\r\n\"amountAvailable\": 20,\r\n\"cost\": 5}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:3000/product",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["product"]
+        }
+      },
+      "response": [
+        {
+          "name": "Create Product",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"productName\": \"shoe\",\r\n\"amountAvailable\": 20,\r\n\"cost\": 5}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/product",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["product"]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Location",
+              "value": "/product/1"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "49"
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 03 Aug 2022 13:21:09 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"id\": 1,\n    \"message\": \"Product created successfully\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Product",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:3000/product/1",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["product", "1"]
+        }
+      },
+      "response": [
+        {
+          "name": "Get Product",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/product/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["product", "1"]
+            }
+          },
+          "status": "Forbidden",
+          "code": 403,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "46"
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 03 Aug 2022 13:22:20 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Only authenticated users allowed\"\n}"
+        },
+        {
+          "name": "Get Product",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/product/1",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["product", "1"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "72"
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 03 Aug 2022 13:23:30 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"id\": 1,\n    \"amountAvailable\": 20,\n    \"productName\": \"shoe\",\n    \"cost\": 5,\n    \"sellerId\": 4\n}"
+        }
+      ]
+    },
+    {
+      "name": "Deposit",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MywidXNlcm5hbWUiOiJyYXBwYWxpIiwicGFzc3dvcmQiOiJiY3J5cHQrc2hhNTEyJDhjMjg1MzYwNjAyNzIxZWE2YjlhNjcwZTk4ZThmNDU0JDEyJDU5OWE5NzQ3MWIyNGJjYzZjZmQzOTJhNjA3MzljMmQ3MjJlZjJlZDA4MmIxNTBjNCIsImRlcG9zaXQiOjAsInJvbGUiOiJidXllciJ9._KEoxDrGGhRtdtrc92FhaBqHFaZDo-6Y8Ve7iBLXgj0",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"deposit\": 20}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:3000/deposit",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["deposit"]
+        }
+      },
+      "response": [
+        {
+          "name": "Deposit",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"deposit\": 20}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/deposit",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["deposit"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "45"
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 03 Aug 2022 13:30:55 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Deposit successful\",\n    \"deposit\": 45\n}"
+        }
+      ]
+    },
+    {
+      "name": "Reset",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MywidXNlcm5hbWUiOiJyYXBwYWxpIiwicGFzc3dvcmQiOiJiY3J5cHQrc2hhNTEyJDhjMjg1MzYwNjAyNzIxZWE2YjlhNjcwZTk4ZThmNDU0JDEyJDU5OWE5NzQ3MWIyNGJjYzZjZmQzOTJhNjA3MzljMmQ3MjJlZjJlZDA4MmIxNTBjNCIsImRlcG9zaXQiOjAsInJvbGUiOiJidXllciJ9._KEoxDrGGhRtdtrc92FhaBqHFaZDo-6Y8Ve7iBLXgj0",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:3000/reset",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["reset"]
+        }
+      },
+      "response": [
+        {
+          "name": "Reset",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:3000/reset",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["reset"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "52"
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 03 Aug 2022 13:37:24 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Deposit reset successfully\",\n    \"deposit\": 0\n}"
+        }
+      ]
+    },
+    {
+      "name": "Buy",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MywidXNlcm5hbWUiOiJyYXBwYWxpIiwicGFzc3dvcmQiOiJiY3J5cHQrc2hhNTEyJDhjMjg1MzYwNjAyNzIxZWE2YjlhNjcwZTk4ZThmNDU0JDEyJDU5OWE5NzQ3MWIyNGJjYzZjZmQzOTJhNjA3MzljMmQ3MjJlZjJlZDA4MmIxNTBjNCIsImRlcG9zaXQiOjAsInJvbGUiOiJidXllciJ9._KEoxDrGGhRtdtrc92FhaBqHFaZDo-6Y8Ve7iBLXgj0",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"productId\": 1,\r\n\"amount\": 1}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:3000/buy",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["buy"]
+        }
+      },
+      "response": [
+        {
+          "name": "Buy",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"productId\": 1,\r\n\"amount\": 1}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/buy",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["buy"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "114"
+            },
+            {
+              "key": "Date",
+              "value": "Wed, 03 Aug 2022 13:38:46 GMT"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Buy successful\",\n    \"totalSpend\": 5,\n    \"productName\": \"shoe\",\n    \"buyAmount\": 1,\n    \"change\": [\n        20,\n        20,\n        10,\n        10\n    ],\n    \"deposit\": 60\n}"
+        }
+      ]
+    }
+  ]
+}
