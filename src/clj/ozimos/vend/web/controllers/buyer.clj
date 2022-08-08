@@ -26,7 +26,7 @@
             sorted-coins-map)))
 
 (defn subtract-coin-map [old-coin-map diff-coin-map]
-  (into {} (map (fn [[k v]] [k (- v (get diff-coin-map k 0))])) old-coin-map ))
+  (into {} (map (fn [[k v]] [k (- v (get diff-coin-map k 0))])) old-coin-map))
 
 (defn coin-map->coins [m]
   (mapcat (fn [[k v]] (repeat v k)) m))
@@ -34,17 +34,26 @@
 (defn max-buy [coins cost amount]
   (let [total-available (reduce + 0 coins)]
     (loop [buy-amount amount]
-      (let [expected-spend (* amount cost)
+      (let [expected-spend (* buy-amount cost)
             sorted-coins-map (coins->sorted-map coins)
             buy-change (get-buy-change sorted-coins-map expected-spend)
             total-spend (reduce + 0 buy-change)]
-        (if (or (> expected-spend total-available )
-                     (not= total-spend expected-spend))
-          (recur (dec buy-amount))
+        (if (or (> expected-spend total-available)
+                (not= total-spend expected-spend))
+          (if (pos-int? (dec buy-amount))
+            (recur (dec buy-amount))
+            (throw (ex-info "Insufficient change for this purchase"
+                            {:type :insufficient-change
+                             :amount buy-amount
+                             :change buy-change
+                             :cost cost
+                             :coins coins})))
           {:buy-amount buy-amount
            :sorted-coins-map sorted-coins-map
            :buy-change buy-change
            :total-spend total-spend})))))
+
+
 
 (defn str->int-arr [s]
   (->> (str/split s #",")
@@ -69,53 +78,60 @@
   [{{{:keys [product_id amount]} :body} :parameters
     {buyer-id :id} :identity
     :as req}]
-  (let [{:keys [query-fn db-conn]} (r.utils/route-data req)
+  (try
+    (let [{:keys [query-fn db-conn]} (r.utils/route-data req)
 
-        {:keys [deposit amount_available cost seller_id]}
-        (query-fn :prepare-buy! {:product_id product_id :id buyer-id})
+          {:keys [deposit amount_available cost seller_id]}
+          (query-fn :prepare-buy! {:product_id product_id :id buyer-id})
 
-        coins (str->int-arr deposit)
+          coins (str->int-arr deposit)
 
-        {:keys [buy-amount buy-change sorted-coins-map total-spend]}
-        (max-buy coins cost (min amount amount_available))
+          {:keys [buy-amount buy-change sorted-coins-map total-spend]}
+          (max-buy coins cost (min amount amount_available))
 
-        sorted-change-map (coins->sorted-map buy-change)
+          sorted-change-map (coins->sorted-map buy-change)
 
-        coins-balance (coin-map->coins (subtract-coin-map sorted-coins-map sorted-change-map))
+          coins-balance (coin-map->coins (subtract-coin-map sorted-coins-map sorted-change-map))
 
-        seller-deposit (str/join "," buy-change)
+          seller-deposit (str/join "," buy-change)
 
-        new-deposit (str/join "," coins-balance)
+          new-deposit (str/join "," coins-balance)
 
-        new-balance (reduce + 0 coins-balance)
+          new-balance (reduce + 0 coins-balance)
 
-        product-name
-        (jdbc/with-transaction [tx db-conn]
-          (let [{updated-buyer-deposit :deposit}
-                (query-fn tx :reset-deposit! {:deposit new-deposit :id buyer-id})
-                {updated-seller-deposit :deposit}
-                (if updated-buyer-deposit
-                  (query-fn tx :deposit! {:deposit seller-deposit :id seller_id})
-                  (throw (ex-info "Buyer deposit update failed" {:deposit new-deposit :id buyer-id})))
-                {product-name :product_name}
-                (if updated-seller-deposit
-                  (query-fn tx :purchase-product! {:cost cost
-                                                   :id product_id
-                                                   :amount buy-amount
-                                                   :old-amount-available amount_available})
-                  (throw (ex-info "Seller deposit update failed" {:deposit seller-deposit :id seller_id})))]
-            (if product-name product-name
-                (throw (ex-info "Product update failed" {})))))]
+          product-name
+          (jdbc/with-transaction [tx db-conn]
+            (let [{updated-buyer-deposit :deposit}
+                  (query-fn tx :reset-deposit! {:deposit new-deposit :id buyer-id})
+                  {updated-seller-deposit :deposit}
+                  (if updated-buyer-deposit
+                    (query-fn tx :deposit! {:deposit seller-deposit :id seller_id})
+                    (throw (ex-info "Buyer deposit update failed" {:deposit new-deposit :id buyer-id})))
+                  {product-name :product_name}
+                  (if updated-seller-deposit
+                    (query-fn tx :purchase-product!
+                              {:type :insufficient-change
+                               :cost cost
+                               :id product_id
+                               :amount buy-amount
+                               :old-amount-available amount_available})
+                    (throw (ex-info "Seller deposit update failed" {:deposit seller-deposit :id seller_id})))]
+              (if product-name product-name
+                  (throw (ex-info "Product update failed" {})))))]
 
-    (if product-name
-      (http-response/ok {:message "Buy successful"
-                        :total-spend total-spend
-                        :product-name product-name
-                        :buy-amount buy-amount
-                        :change (vec coins-balance)
-                        :deposit new-balance})
-      
-      (http-response/conflict {:message "Purchase not successful. Please try again"}))))
+      (if product-name
+        (http-response/ok {:message "Buy successful"
+                           :total-spend total-spend
+                           :product-name product-name
+                           :buy-amount buy-amount
+                           :change (vec coins-balance)
+                           :deposit new-balance})
+
+        (http-response/conflict {:message "Purchase not successful. Please try again"})))
+    (catch clojure.lang.ExceptionInfo e
+      (if (= :insufficient-change (:type (ex-data e)))
+        (http-response/bad-request {:message "Insufficient change for this purchase"})
+        (throw e)))))
 
 (defn reset
   [{ident :identity :as req}]
